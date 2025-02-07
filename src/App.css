@@ -128,6 +128,8 @@
   }
 
 
-  .back:hover{
-    transform:scale(1.05)
+  .fa-backward:hover{
+    transform: scale(
+      1.2
+    );
   }
