@@ -1,0 +1,133 @@
+
+
+.sidebar {
+  width:320px;
+  background-color: #d3d3d3;
+  color: white;
+  padding: 20px;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  height: 100vh;
+  z-index: 2;
+  overflow: scroll;
+}
+.sidebar:after{
+  content: "";
+  width:20px;
+  height:200px;
+  background:red
+}
+
+.sidebar.collapsed {
+  transform: translateX(-100%);
+}
+
+
+.fa-circle-chevron-left{
+  margin:10px;
+  font-size:40px;
+  font-style: normal;
+  color:goldenrod;
+  z-index:10
+}
+
+
+
+
+.title{
+  margin:  1em 0;
+
+}
+.title > p{
+    text-align: left;
+    font-family: 'Georgia', 'Times New Roman', Times, serif;
+    font-size: 20px; 
+    letter-spacing: 2px; 
+    text-transform: uppercase;
+    line-height: 1.2; 
+    color:rgba(0, 0, 0, 0.908)
+  }
+
+  .icons{
+    display:flex;
+
+  }
+  .icons>span{
+    margin:2px 10px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+  }
+  .icons>span>img{
+    background-color: rgb(236, 231, 226);
+    width:25px;
+    height: 25px;
+    border-radius: 50%;
+    padding: 8px;
+    margin: 0;
+  }
+  .icons>span>p{
+    text-align: left;
+    margin: 0;
+
+
+  }
+  .icons>span>img:hover{
+    transform:scale(1.2)
+  }
+  ul{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li{
+    margin: 0;
+    color: black;
+  }
+  .description{
+    margin: 0;
+    padding: 0;
+    max-height: 14em; 
+    overflow: hidden;
+    line-height: 1.5em;
+    transition: max-height 0.5s ease;
+    color: black;
+  }
+  .description.close{
+    max-height: 1000px;
+  }
+  .button{
+    margin: 0 2px;
+    color:orange;
+    cursor: pointer;
+  }
+  .button:hover{
+    transform: scale(1.1);
+  }
+  .foot{
+    margin: 5px 2px;
+    width: 140px;
+    height: 40px;
+    border-radius: 5px;
+    box-shadow: 1px 3px 10px rgb(71, 61, 61);
+  }
+  .foot:hover{
+    transform: scale(1.05);
+  }
+  #b1{
+    background-color: rgb(237, 114, 69);
+    border:none;
+    color:white
+  }
+  #b2{
+    background: none;
+    border-color: rgb(237, 114, 69);
+    color: rgb(237, 114, 69)
+  }
+  .toggle{
+    width:120%;    display: flex;
+    justify-content: space-between;
+  }
