@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App"  >
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
-      <p  onClick={() => setIsCollapsed(!isCollapsed)} style={{ margin:"0",width:"100%" ,display:"flex" ,justifyContent:"right"}}><i class="fa-solid fa-backward" style={{color:" #000000" ,background:"gold",width:"20px" ,padding:" 2px 4px"}}></i></p>
+      <p className="back" onClick={() => setIsCollapsed(!isCollapsed)} style={{ margin:"0",width:"100%" ,display:"flex" ,justifyContent:"right"}}><i class="fa-solid fa-backward" style={{color:" #000000" ,background:"gold",width:"20px" ,padding:" 2px 4px"}}></i></p>
         <Content/>
       </div>
      

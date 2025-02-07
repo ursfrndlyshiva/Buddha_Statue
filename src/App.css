@@ -12,12 +12,7 @@
   z-index: 2;
   overflow: scroll;
 }
-.sidebar:after{
-  content: "";
-  width:20px;
-  height:200px;
-  background:red
-}
+
 
 .sidebar.collapsed {
   transform: translateX(-100%);
@@ -130,4 +125,9 @@
   .toggle{
     width:120%;    display: flex;
     justify-content: space-between;
+  }
+
+
+  .back:hover{
+    transform:scale(1.05)
   }
