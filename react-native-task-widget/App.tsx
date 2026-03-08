@@ -10,12 +10,15 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import * as IntentLauncher from 'expo-intent-launcher';
+import { StatusBar } from 'expo-status-bar';
 import { ICON_OPTIONS, IconOption, SIZE_OPTIONS, WidgetSize } from './src/icons';
 
 type Task = {
   id: string;
   appPackage: string;
   action: string;
+  deepLink?: string;
   label: string;
 };
 
@@ -23,22 +26,36 @@ const TASKS: Task[] = [
   {
     id: 'gmail-compose',
     appPackage: 'com.google.android.gm',
-    action: 'android.intent.action.SEND',
+    action: 'android.intent.action.SENDTO',
+    deepLink: 'mailto:',
     label: 'Compose email',
   },
   {
     id: 'maps-home',
     appPackage: 'com.google.android.apps.maps',
     action: 'android.intent.action.VIEW',
+    deepLink: 'google.navigation:q=home',
     label: 'Navigate home',
   },
   {
     id: 'spotify-liked',
     appPackage: 'com.spotify.music',
     action: 'android.intent.action.VIEW',
+    deepLink: 'spotify:collection:tracks',
     label: 'Liked songs',
   },
 ];
+
+type ShortcutPayload = {
+  shortcutId: string;
+  title: string;
+  appPackage: string;
+  action: string;
+  deepLink?: string;
+  size: WidgetSize;
+  color: string;
+  icon: IconOption;
+};
 
 const { TaskShortcutModule } = NativeModules;
 
@@ -65,26 +82,52 @@ export default function App() {
     setCustomTitle(task.label);
   };
 
+  const buildPayload = (): ShortcutPayload => ({
+    shortcutId: selectedTask.id,
+    title: customTitle || selectedTask.label,
+    appPackage: selectedTask.appPackage,
+    action: selectedTask.action,
+    deepLink: selectedTask.deepLink,
+    size: widgetSize,
+    color: widgetColor,
+    icon,
+  });
+
   const createShortcut = async () => {
+    const payload = buildPayload();
+
+    if (!/^#[0-9A-Fa-f]{6}$/.test(widgetColor)) {
+      Alert.alert('Invalid color', 'Use a hex color like #2D7FF9.');
+      return;
+    }
+
     try {
-      await TaskShortcutModule.createTaskWidgetShortcut({
-        shortcutId: selectedTask.id,
-        title: customTitle,
-        appPackage: selectedTask.appPackage,
-        action: selectedTask.action,
-        size: widgetSize,
-        color: widgetColor,
-        icon,
-      });
-      Alert.alert('Created', 'Shortcut widget has been pinned to launcher.');
+      if (TaskShortcutModule?.createTaskWidgetShortcut) {
+        await TaskShortcutModule.createTaskWidgetShortcut(payload);
+        Alert.alert('Created', 'Shortcut widget has been pinned to launcher.');
+        return;
+      }
+
+      Alert.alert(
+        'Native module missing',
+        'Run `npm run prebuild` once and add your Android TaskShortcutModule implementation.\n\nPayload copied below for native side:',
+      );
+      console.log('Shortcut payload:', payload);
     } catch (error) {
       Alert.alert('Error', String(error));
     }
   };
 
+  const openWidgetSettings = async () => {
+    await IntentLauncher.startActivityAsync(IntentLauncher.ActivityAction.APPLICATION_DETAILS_SETTINGS, {
+      data: `package:${selectedTask.appPackage}`,
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Task Widget Builder</Text>
+      <StatusBar style="dark" />
+      <Text style={styles.heading}>Task Widget Builder (Expo)</Text>
 
       <Text style={styles.sectionTitle}>1) Choose task</Text>
       <FlatList
@@ -111,6 +154,7 @@ export default function App() {
         value={widgetColor}
         onChangeText={setWidgetColor}
         placeholder="#RRGGBB"
+        autoCapitalize="none"
         style={styles.input}
       />
 
@@ -144,6 +188,10 @@ export default function App() {
 
       <Pressable style={styles.ctaButton} onPress={createShortcut}>
         <Text style={styles.ctaText}>Create widget shortcut</Text>
+      </Pressable>
+
+      <Pressable style={styles.secondaryButton} onPress={openWidgetSettings}>
+        <Text style={styles.secondaryText}>Open selected app settings</Text>
       </Pressable>
     </SafeAreaView>
   );
@@ -205,4 +253,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ctaText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+  secondaryButton: {
+    marginTop: 10,
+    borderColor: '#94A3B8',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  secondaryText: { color: '#334155', fontSize: 14, fontWeight: '600' },
 });

@@ -1,24 +1,43 @@
-# React Native Android Task Widget Builder
+# Expo Android Task Widget Builder
 
-This app demonstrates how to build a **React Native Android app** that lets users create task launcher shortcuts/widgets with:
+This Expo + React Native app provides a configurable UI for creating Android task widget shortcuts with:
 
-- task target selection (package + action)
+- task target selection (`package`, Android action, optional deep link)
 - widget size selection (`Small`, `Medium`, `Large`)
-- widget color selection (hex input)
-- icon selection (`default`, `check`, `alarm`, `focus`)
+- widget color selection (hex value)
+- widget icon selection (`default`, `check`, `alarm`, `focus`)
 
-## Architecture
+## What is included
 
-- `App.tsx`: React Native UI for picking task and appearance.
-- `TaskShortcutModule.kt`: native module exposed to JS as `TaskShortcutModule`.
-- `TaskWidgetProvider.kt`: Android `AppWidgetProvider` implementation.
-- `TaskWidgetConfigureActivity.kt`: widget configuration activity.
+- `App.tsx`: complete builder UI, preview card, and shortcut payload assembly.
+- Expo-compatible project configuration (`app.json`, `babel.config.js`).
+- Android wrapper scripts including `android/gradle.bat` and `android/gradlew.bat`.
 
-## Run
+> `TaskShortcutModule` is called when available (after adding native Android implementation). Until then the app still runs in Expo and logs the payload to wire into native code.
+
+## Run in Android emulator with Expo
 
 ```bash
+cd react-native-task-widget
 npm install
+npm run prebuild
 npm run android
 ```
 
-> Note: Home-screen widget sizing can vary by launcher; the selected size is treated as a preference and visual preview setting.
+## Gradle wrapper files
+
+The project now contains:
+
+- `android/gradle.bat` (Windows convenience wrapper)
+- `android/gradlew.bat` (standard Gradle wrapper launcher)
+- `android/gradlew` (Unix launcher)
+- `android/gradle/wrapper/gradle-wrapper.properties`
+
+If `gradle-wrapper.jar` is missing in your environment, run:
+
+```bash
+cd android
+./gradlew wrapper
+```
+
+(or `gradlew.bat wrapper` on Windows).
